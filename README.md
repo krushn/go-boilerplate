@@ -1,8 +1,6 @@
 
 # Golang API boilerplate 
 
-***
-
 
 ## API documentation
 
