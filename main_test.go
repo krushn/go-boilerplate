@@ -12,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"github.com/brianvoe/gofakeit/v6"
+	"os"
 )
 
 func TestMain(t *testing.T) {
@@ -35,8 +36,12 @@ func TestMain(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 
-	// Create new gin instance
-	//engine := gin.New()
+	//Start Redis on database 1 - it's used to store the JWT but you can use it for anythig else
+	//Example: db.GetRedis().Set(KEY, VALUE, at.Sub(now)).Err()
+
+	if os.Getenv("REDIS_HOST") != "" {
+		db.InitRedis(1)
+	}
 
 	// Add /example route via handler function to the gin instance
 	handler := RouteHandler(app)
