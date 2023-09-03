@@ -84,6 +84,10 @@ func (m AuthModel) CreateAuth(userid uint64, td *TokenDetails) error {
 	rt := time.Unix(td.RtExpires, 0)
 	now := time.Now()
 
+	if os.Getenv("GIN_MODE") == "test" {
+		return nil
+	}
+
 	errAccess := db.GetRedis().Set(ctx, td.AccessUUID, strconv.Itoa(int(userid)), at.Sub(now)).Err()
 	if errAccess != nil {
 		return errAccess
@@ -93,6 +97,7 @@ func (m AuthModel) CreateAuth(userid uint64, td *TokenDetails) error {
 	if errRefresh != nil {
 		return errRefresh
 	}
+
 	return nil
 }
 

@@ -42,49 +42,24 @@ func main() {
 
 	//Start Redis on database 1 - it's used to store the JWT but you can use it for anythig else
 	//Example: db.GetRedis().Set(KEY, VALUE, at.Sub(now)).Err()
-	db.InitRedis(1)
+
+	if os.Getenv("REDIS_HOST") != "" {
+		db.InitRedis(1)
+	}
 
 	setupSentry()
 
-	app.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
-	v1 := app.Group("/v1")
-	{
-		/*** START USER ***/
-		user := new(controllers.UserController)
-
-		v1.POST("/user/login", user.Login)
-		v1.POST("/user/register", user.Register)
-		v1.GET("/user/logout", user.Logout)
-
-		/*** START AUTH ***/
-		auth := new(controllers.AuthController)
-
-		//Refresh the token when needed to generate new access_token and refresh_token for the user
-		v1.POST("/token/refresh", auth.Refresh)
-
-		/*** START Article
-		article := new(controllers.ArticleController)
-
-		v1.POST("/article", TokenAuthMiddleware(), article.Create)
-		v1.GET("/articles", TokenAuthMiddleware(), article.All)
-		v1.GET("/article/:id", TokenAuthMiddleware(), article.One)
-		v1.PUT("/article/:id", TokenAuthMiddleware(), article.Update)
-		v1.DELETE("/article/:id", TokenAuthMiddleware(), article.Delete)***/
-	}
-
-	//app.LoadHTMLGlob("./public/html/*")
-
-	//app.Static("/public", "./public")
+	RouteHandler(app)
 
 	app.Run() // listen and serve on 0.0.0.0:8080
+
 }
 
 func setupSentry() {
+
+	if os.Getenv("SENTRY_DSN") == "" {
+		return
+	}
 
 	app := gin.Default()
 

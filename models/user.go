@@ -30,7 +30,7 @@ func (m UserModel) Login(form forms.LoginForm) (user User, token Token, err erro
 	result := db.GetDB().Model(&user).Where("email", form.Email).First(&user)
 
 	if result.Error != nil {
-		return user, token, err
+		return user, token, result.Error
 	}
 
 	//Compare the password form and database if match

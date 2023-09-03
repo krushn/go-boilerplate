@@ -24,13 +24,14 @@ func getUserID(c *gin.Context) (userID int64) {
 func (ctrl UserController) Login(c *gin.Context) {
 	var loginForm forms.LoginForm
 
-	if validationErr := c.ShouldBindJSON(&loginForm); validationErr != nil {
+	if validationErr := c.ShouldBind(&loginForm); validationErr != nil {
 		message := userForm.Login(validationErr)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
 		return
 	}
 
 	user, token, err := userModel.Login(loginForm)
+
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Invalid login details"})
 		return
@@ -43,7 +44,7 @@ func (ctrl UserController) Login(c *gin.Context) {
 func (ctrl UserController) Register(c *gin.Context) {
 	var registerForm forms.RegisterForm
 
-	if validationErr := c.ShouldBindJSON(&registerForm); validationErr != nil {
+	if validationErr := c.ShouldBind(&registerForm); validationErr != nil {
 		message := userForm.Register(validationErr)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
 		return

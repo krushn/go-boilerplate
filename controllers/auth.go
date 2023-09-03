@@ -42,7 +42,7 @@ func (ctl AuthController) TokenValid(c *gin.Context) {
 func (ctl AuthController) Refresh(c *gin.Context) {
 	var tokenForm forms.Token
 
-	if c.ShouldBindJSON(&tokenForm) != nil {
+	if c.ShouldBind(&tokenForm) != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": "Invalid form", "form": tokenForm})
 		c.Abort()
 		return
