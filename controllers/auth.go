@@ -8,6 +8,7 @@ import (
 
 	"go-boilerplate/forms"
 	"go-boilerplate/models"
+
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
 )
@@ -28,13 +29,22 @@ func (ctl AuthController) TokenValid(c *gin.Context) {
 	}
 
 	userID, err := authModel.FetchAuth(tokenAuth)
+
 	if err != nil {
 		//Token does not exists in Redis (User logged out or expired)
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Please login first"})
 		return
 	}
 
+	if c.Request.URL.Path == "/v1/token/validate" {
+		c.JSON(http.StatusOK, gin.H{
+			"userID": userID,
+		})
+		return
+	}
+
 	//To be called from GetUserID()
+
 	c.Set("userID", userID)
 }
 

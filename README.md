@@ -34,12 +34,20 @@ https://github.com/stretchr/testify
 
 `export GIN_MODE="test" && go test .  `
 
+### run redis 
+
+`redis-server` 
+
 ### run app
 
 `go run .`
 
+### live-reloading app 
+
+`air`
 
 ### build app 
 
 `go build .`
+
 

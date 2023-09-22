@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-boilerplate/db"
 	"go-boilerplate/forms"
+	"go-boilerplate/models"
 	"go-boilerplate/migrations"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/joho/godotenv"
@@ -77,10 +78,19 @@ func TestMain(t *testing.T) {
 		Expect().
 		Status(http.StatusNotAcceptable)//StatusUnauthorized
 
+	type LoginResponse struct {
+		Message   string `json:"message"`
+		Token  models.Token    `json:"token"`
+		User models.User `json:"user"`
+	}
+
+	var loginResponse LoginResponse
+
 	e.POST("/v1/user/login").
 		WithForm(gin.H{"email": "demo@localhost.com", "password": "demo1admin"}).
 		Expect().
-		Status(http.StatusOK).JSON().Object().HasValue("message", "Successfully logged in")
+		Status(http.StatusOK).JSON().Object().HasValue("message", "Successfully logged in").
+		Decode(&loginResponse)
 
 	/*e.GET("/v1/user/logout").
 		Expect().

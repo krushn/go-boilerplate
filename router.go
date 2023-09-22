@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"go-boilerplate/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
 // RouteHandler Create add /example route to gin engine
@@ -30,6 +31,8 @@ func RouteHandler(app *gin.Engine) *gin.Engine {
 		//Refresh the token when needed to generate new access_token and refresh_token for the user
 		v1.POST("/token/refresh", auth.Refresh)
 
+		v1.GET("/token/validate", auth.TokenValid)
+
 		/*** START Article
 		article := new(controllers.ArticleController)
 
@@ -47,5 +50,3 @@ func RouteHandler(app *gin.Engine) *gin.Engine {
 	// return gin engine with newly added route
 	return app
 }
-
-
